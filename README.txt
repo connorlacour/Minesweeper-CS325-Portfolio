@@ -24,7 +24,7 @@ Resizing the repl.it windows so that the console is made as small as possible wi
 
 A 22 x 22 random board is randomly generated with 99 bombs. 
 
-However, the user can edit the code at line 483 to edit difficulty:
+However, the user can edit the code at line 507 to edit difficulty:
 	By default it reads "Minesweeper = Board(22, 99)"
 
 	The first parameter determines the size of the board (and should not be tampered with. I did not get to coding this to be dynamic).

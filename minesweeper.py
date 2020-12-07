@@ -8,10 +8,11 @@ from pygame.locals import *
 
 # revealed_array guide:
 #   0 = empty
-#  -1 = bomb
 #   1 = num revealed
-#   2 = flag
-# call main to start game
+
+# cells_array guide:
+#   -1 = bomb
+#   0+ = value is equal to number of adjacent bombs
 
 def make_2d_array():
     w = 22
@@ -85,7 +86,8 @@ class Board:
                 if event.type == QUIT:
                     return
                 if self.lose is False:
-                    self.mouse_click(cells_array, revealed_array)
+                    if self.win is False:
+                        self.mouse_click(cells_array, revealed_array)
                 else:
                     pressed_keys = game.key.get_pressed()
                     if pressed_keys[K_SPACE]:
@@ -397,14 +399,20 @@ class Board:
     def check_for_win(self, cells_array, revealed_array):
 
         # loop the board
-        for i in range(0, self.difficulty):
-            for j in range(0, self.difficulty):
+        for i in range(0, self.size):
+            for j in range(0, self.size):
 
                 # if cell is not a bomb
+                # if it is a bomb, it does not need to be flagged
                 if cells_array[i][j] >= 0:
 
                     # if cell is not revealed, not a win state
-                    if revealed_array[i][j] == 0:
+                    if revealed_array[i][j] != 1:
+                        return False
+
+                    cell_coord = [i, j]
+                    # if non-bomb cell is flagged, not a win state
+                    if cell_coord in self.flag_array:
                         return False
         # if not returned False, return True for win
         return True
@@ -496,4 +504,4 @@ class Board:
                     self.surface.blit(img, center)
 
 
-Minesweeper = Board(22, 3)
+Minesweeper = Board(22, 15)
