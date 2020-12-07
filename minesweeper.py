@@ -17,7 +17,7 @@ def make_2d_array():
     w = 22
     h = 22
     arr = [[0 for x in range(w)] for y in range(h)]
-    print(arr)
+    # print(arr)
     return arr
 
 
@@ -92,10 +92,14 @@ class Board:
                         self.lose = False
                         self.flag_array = []
                         self.main()
-                if len(self.flag_array) == self.difficulty:
-                    if self.check_for_win(cells_array):
-                        self.win = True
-                        self.display_win_message()
+                if self.check_for_win(cells_array, revealed_array):
+                    self.win = True
+                    self.display_win_message()
+                    pressed_keys = game.key.get_pressed()
+                    if pressed_keys[K_SPACE]:
+                        self.win = False
+                        self.flag_array = []
+                        self.main()
 
             game.display.update()
 
@@ -390,14 +394,19 @@ class Board:
 
         return array
 
-    def check_for_win(self, cells_array):
-        for i in range(0, len(self.flag_array)):
-            for j in range(0, len(cells_array)):
-                if self.flag_array[i] == cells_array[j]:
-                    if cells_array[j] != -1:
+    def check_for_win(self, cells_array, revealed_array):
+
+        # loop the board
+        for i in range(0, self.difficulty):
+            for j in range(0, self.difficulty):
+
+                # if cell is not a bomb
+                if cells_array[i][j] >= 0:
+
+                    # if cell is not revealed, not a win state
+                    if revealed_array[i][j] == 0:
                         return False
-                    else:
-                        print('flag on bomb')
+        # if not returned False, return True for win
         return True
 
     def display_win_message(self):
@@ -409,17 +418,24 @@ class Board:
         y_index = 280
 
         font = game.font.SysFont(None, 34)
+        font2 = game.font.SysFont(None, 25)
 
         outer_rect = Rect(x_index, y_index, 375, 85)
         inner_rect = Rect(x_index + 5, y_index + 5, 365, 75)
-        center = (x_index + 125, y_index + 38)
+        center = (x_index + 125, y_index + 30)
+        center2 = (x_index + 80, y_index + 55)
 
         # val = text to be displayed
         val = 'You Won!!'
+        val2 = 'press space to play again'
 
         img = font.render(val, True, black)
+        img2 = font2.render(val2, True, black)
+
         game.draw.rect(surface=self.surface, color=light_grey, rect=outer_rect)
         game.draw.rect(surface=self.surface, color=white, rect=inner_rect)
+
+        self.surface.blit(img2, center2)
         self.surface.blit(img, center)
 
     def display_loss_message(self):
@@ -480,4 +496,4 @@ class Board:
                     self.surface.blit(img, center)
 
 
-Minesweeper = Board(22, 90)
+Minesweeper = Board(22, 3)
