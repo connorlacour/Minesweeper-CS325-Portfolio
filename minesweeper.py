@@ -504,4 +504,4 @@ class Board:
                     self.surface.blit(img, center)
 
 
-Minesweeper = Board(22, 15)
+Minesweeper = Board(22, 99)
