@@ -83,7 +83,7 @@ class Board:
         while 1:
 
             for event in game.event.get():
-                if event.type == QUIT:
+                if event.type == game.QUIT:
                     return
                 if self.lose is False:
                     if self.win is False:
